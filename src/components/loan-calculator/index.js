@@ -1,5 +1,5 @@
 import React from 'react';
-import { get, round } from 'lodash';
+import { round } from 'lodash';
 import {
   FormControl,
   FormLabel,
@@ -9,17 +9,18 @@ import {
   Stack,
   Text,
   Spinner,
+  Link as CLink
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import {
   calculateEMI,
   calculateMonthlyInterestAmount,
 } from '../../utils/emi-calculator';
-import { Link as CLink } from '@chakra-ui/react';
 import EMIPlanTable from './emiPlanTable';
 import CustomInput from '../shared/CustomInput';
 import convertCurrency from '../../utils/currencyConverter';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { currencyTypes } from '../../utils/constant';
 
 function LoanCalculator() {
   const [allEMIPlan, setAllEMIPlan] = React.useState([]);
@@ -31,12 +32,12 @@ function LoanCalculator() {
     if (!values.loanAmount) {
       errors.loanAmount = 'Required';
     } else if (values.loanAmount < 0) {
-      errors.loanAmount = 'Please enter a valid number';
+      errors.loanAmount = 'Please enter a valid amount';
     }
     if (!values.loanTenure) {
       errors.loanAmount = 'Required';
     } else if (values.loanTenure < 0) {
-      errors.loanAmount = 'Please enter a valid number';
+      errors.loanAmount = 'Please enter a valid tenure';
     }
     if (!values.rateOfInterest) {
       errors.rateOfInterest = 'Required';
@@ -90,8 +91,8 @@ function LoanCalculator() {
     if (values.loanAmount) {
       setIsConvertingCurrency(true);
       const conversionData = await convertCurrency(
-        'INR',
-        'USD',
+        currencyTypes.INR,
+        currencyTypes.USD,
         round(
           calculateEMI(
             values.loanAmount,
@@ -111,8 +112,7 @@ function LoanCalculator() {
       <img
         src={'https://d2s30hray1l0uq.cloudfront.net/frontend/logo.png'}
         alt="PixelPhant"
-        mb={5}
-        px={5}
+        style={{padding: '10px'}}
       />
       <Flex
         direction={'row'}
@@ -120,7 +120,6 @@ function LoanCalculator() {
         justifyContent={'space-around'}
         style={{ height: '100vh' }}
         w="100%"
-        py={5}
         my={5}
       >
         <div style={{ width: '30%' }}>
